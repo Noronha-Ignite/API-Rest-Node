@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto'
 import { FastifyInstance, RouteOptions } from 'fastify'
 import { knexClient } from './lib/knexClient'
 
@@ -6,9 +7,20 @@ const routeOptions: RouteOptions[] = [
     method: 'GET',
     url: '/',
     handler: async (request, reply) => {
-      const migrations = await knexClient.select('*').from('knex_migrations')
+      const [transactionId] = await knexClient('transactions').insert({
+        id: randomUUID(),
+        title: 'Transação de teste',
+        amount: 1500,
+      })
 
-      return reply.send({ migrations })
+      const transaction = await knexClient('transactions')
+        .select('*')
+        .where({
+          id: transactionId,
+        })
+        .first()
+
+      return reply.send({ transaction })
     },
   },
 ]
