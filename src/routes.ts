@@ -1,11 +1,14 @@
 import { FastifyInstance, RouteOptions } from 'fastify'
+import { knexClient } from './database'
 
 const routeOptions: RouteOptions[] = [
   {
     method: 'GET',
     url: '/',
     handler: async (request, reply) => {
-      reply.send({ hello: 'world' })
+      const tables = await knexClient('sqlite_schema').select('*')
+
+      return reply.send({ tables })
     },
   },
 ]
@@ -15,5 +18,3 @@ export async function routes(fastify: FastifyInstance) {
     fastify.route(route)
   })
 }
-
-export default () => undefined
