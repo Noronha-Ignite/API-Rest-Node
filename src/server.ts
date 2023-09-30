@@ -1,7 +1,8 @@
 import fastify from 'fastify'
+import { env } from './env'
 import { routes } from './routes'
 
-const PORT = Number(process.env.PORT) || 3333
+const PORT = env.PORT
 
 const app = fastify()
 
