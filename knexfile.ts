@@ -1,3 +1,3 @@
-import { knexConfig } from './src/lib/knexClient'
+import { knexConfig } from './src/libs/knexClient'
 
 export default knexConfig
