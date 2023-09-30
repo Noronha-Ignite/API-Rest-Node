@@ -5,7 +5,34 @@ import { z } from 'zod'
 import { knexClient } from '../lib/knexClient'
 
 export const transactionsRoutes = async (app: FastifyInstance) => {
-  app.post('/', async (req, res) => {
+  app.get('/', async (_, reply) => {
+    const transactions = await knexClient('transactions').select()
+
+    return reply.send({ transactions })
+  })
+
+  app.get('/:id', async (req, reply) => {
+    const transactionDetailParamsSchema = z.object({
+      id: z.string().uuid(),
+    })
+
+    const { id } = transactionDetailParamsSchema.parse(req.params)
+
+    const transaction = await knexClient('transactions')
+      .select('*')
+      .where({
+        id,
+      })
+      .first()
+
+    if (!transaction) {
+      return reply.status(404).send({ message: 'Transaction not found' })
+    }
+
+    return reply.send({ transaction })
+  })
+
+  app.post('/', async (req, reply) => {
     const transactionBodySchema = z.object({
       title: z.string(),
       amount: z.number(),
@@ -17,9 +44,9 @@ export const transactionsRoutes = async (app: FastifyInstance) => {
     await knexClient('transactions').insert({
       id: randomUUID(),
       title,
-      amount: type === 'credit' ? amount : -amount,
+      amount: type === 'credit' ? amount : amount * -1,
     })
 
-    return res.status(201).send()
+    return reply.status(201).send()
   })
 }
