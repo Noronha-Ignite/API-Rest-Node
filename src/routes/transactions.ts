@@ -49,10 +49,22 @@ export const transactionsRoutes = async (app: FastifyInstance) => {
 
     const { title, amount, type } = transactionBodySchema.parse(req.body)
 
+    let sessionId = req.cookies.sessionId
+
+    if (!sessionId) {
+      sessionId = randomUUID()
+
+      reply.cookie('sessionId', sessionId, {
+        path: '/',
+        maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+      })
+    }
+
     await knexClient('transactions').insert({
       id: randomUUID(),
       title,
       amount: type === 'credit' ? amount : amount * -1,
+      session_id: sessionId,
     })
 
     return reply.status(201).send()
