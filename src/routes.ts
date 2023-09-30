@@ -1,14 +1,14 @@
 import { FastifyInstance, RouteOptions } from 'fastify'
-import { knexClient } from './database'
+import { knexClient } from './lib/knexClient'
 
 const routeOptions: RouteOptions[] = [
   {
     method: 'GET',
     url: '/',
     handler: async (request, reply) => {
-      const tables = await knexClient('sqlite_schema').select('*')
+      const migrations = await knexClient.select('*').from('knex_migrations')
 
-      return reply.send({ tables })
+      return reply.send({ migrations })
     },
   },
 ]
