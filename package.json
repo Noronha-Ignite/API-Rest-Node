@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
+    "test": "vitest",
     "lint": "eslint --fix src --ext .ts",
     "migrate:latest": "tsx ./node_modules/.bin/knex migrate:latest",
     "migrate:make": "tsx ./node_modules/.bin/knex migrate:make",
@@ -16,10 +17,13 @@
   "devDependencies": {
     "@rocketseat/eslint-config": "^2.1.0",
     "@types/node": "^20.8.0",
+    "@types/supertest": "^2.0.13",
     "eslint": "^8.50.0",
     "eslint-plugin-import": "^2.28.1",
+    "supertest": "^6.3.3",
     "tsx": "^3.13.0",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "vitest": "^0.34.6"
   },
   "dependencies": {
     "@fastify/cookie": "^9.1.0",
