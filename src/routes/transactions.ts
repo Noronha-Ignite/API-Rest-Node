@@ -4,8 +4,26 @@ import { z } from 'zod'
 
 import { knexClient } from '../libs/knexClient'
 import { checkSessionIdExists } from '../middlewares/check-session-id-exists'
+import { deepObjectMap } from '../utils/object'
 
 export const transactionsRoutes = async (app: FastifyInstance) => {
+  app.addHook('onSend', (_, __, payload, done) => {
+    if (!payload) done()
+
+    const parsedPayload = deepObjectMap(
+      JSON.parse(String(payload)),
+      (value) => {
+        if (!isNaN(Number(value))) {
+          return Number(value)
+        }
+
+        return value
+      },
+    )
+
+    return done(null, JSON.stringify(parsedPayload))
+  })
+
   app.get('/', { preHandler: [checkSessionIdExists] }, async (req, reply) => {
     const { sessionId } = req.cookies
 
