@@ -7,6 +7,6 @@ app
   .listen({
     port: PORT,
   })
-  .then(() => {
-    console.log(`Server running on http://localhost:${PORT}`)
+  .then((url) => {
+    console.log(`Server running on ${url}`)
   })
