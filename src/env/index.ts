@@ -14,10 +14,8 @@ const envSchema = z
     NODE_ENV: z
       .enum(['development', 'test', 'production'])
       .default('production'),
-    PORT: z.preprocess(
-      (a) => (a ? parseInt(z.string().max(5).parse(a), 10) : undefined),
-      z.number().positive().default(3333),
-    ),
+    PORT: z.coerce.number().positive().default(3333),
+
     DB_CLIENT: z.string(),
 
     DB_HOST: z.string().optional(),
