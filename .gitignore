@@ -4,3 +4,5 @@ tmp/*.sqlite
 
 .env
 .env.test
+
+dist

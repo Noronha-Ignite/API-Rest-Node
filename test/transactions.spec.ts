@@ -1,4 +1,6 @@
 import { execSync } from 'node:child_process'
+import { rm } from 'node:fs/promises'
+import path from 'node:path'
 import request from 'supertest'
 import {
   it,
@@ -19,6 +21,7 @@ describe('Transactions routes', () => {
 
   afterAll(async () => {
     await app.close()
+    await rm(path.resolve(__dirname, '..', 'tmp', 'test.sqlite'))
   })
 
   beforeEach(() => {
